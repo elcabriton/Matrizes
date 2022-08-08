@@ -1,6 +1,7 @@
 import multiprocessing
 import time
 import pandas as pd
+import numpy as np
 
 
 # LER ARQUIVOS PRIMEIRO
@@ -14,44 +15,72 @@ import pandas as pd
 # • Menores de cada linha
 # • Menores de cada coluna
 
+COLUNA = 0
+LINHA = 1
+
+# df = pd.read_csv('txt.txt', header=None, sep='  ', engine='python')
+
+
+def ord_matriz(df, ordenar=None,):
+    df = pd.DataFrame(np.sort(df.values, axis=ordenar))
+    return df
+
+
+def soma_linhas(df):
+    return df.sum(axis=1)
+
+
+def soma_colunas(df):
+    return df.sum(axis=0)
+
+
+def soma_total(df):
+    return df.sum().sum()
+
+
+def maiores_linhas(df):
+    return df.max(axis=1)
+
+
+def maiores_colunas(df):
+    return df.max(axis=0)
+
+
+def menores_linhas(df):
+    return df.min(axis=1)
+
+
+def menores_colunas(df):
+    return df.min(axis=0)
+
+
+def escrever_arquivo(arquivo_entrada):
+    df = pd.read_csv(arquivo_entrada, header=None, sep='  ', engine='python')
+    ordenar_linha = ord_matriz(df, LINHA)
+    ordenar_coluna = ord_matriz(df, COLUNA)
+    sum_linha = soma_linhas(df)
+    sum_coluna = soma_colunas(df)
+    sum_total = soma_total(df)
+    maior_linha = maiores_linhas(df)
+    maior_coluna = maiores_colunas(df)
+    menor_linha = menores_linhas(df)
+    menor_coluna = menores_colunas(df)
+    
+    resultados = np.array([np.zeros(100) for _ in range(7)])
+
+    resultados[0] = sum_linha
+    resultados[1] = sum_coluna
+    resultados[2, 0] = sum_total
+    resultados[3] = maior_linha
+    resultados[4] = maior_coluna
+    resultados[5] = menor_linha
+    resultados[6] = menor_coluna
+    pd_resultados = pd.DataFrame(data=resultados)
+    resultado_final = pd.concat([ordenar_linha, ordenar_coluna, pd_resultados])
+    resultado_final = resultado_final.applymap(
+        lambda number: '{:e}'.format(number))
+    resultado_final.to_csv(arquivo_entrada+'_OUT.txt', sep=' ', index=False, header=False)
 
 
 
-def notacaocientifico_int(string_notacao):
-    string_formatada = string_notacao.replace('.', '').replace('e', '')
-    lista = string_formatada.split('+')
-    divisor = int(lista[0])
-    expoente = int(lista[1])
-    expoente = 10**expoente
-    resultado = expoente*divisor
-    return resultado
-
-
-def ord_linha(linhas):
-    lista_int = []
-
-    elementos = linhas.split("  ")
-
-    for elemento in elementos:
-        elemento_numerico = notacaocientifico_int(elemento)
-        lista_int.append(elemento_numerico)
-    linhas_ordenadas = sorted(lista_int)
-    return linhas_ordenadas
-
-
-arquivo = open('txt.txt', 'r')
-linhas = arquivo.readlines()
-# print(linhas)
-linhas_filtradas = []
-
-for x in linhas:
-
-    linhas_filtradas.append(x.strip().replace('\n', ''))
-arquivo_save = open('ordenado.txt', 'w')
-
-for linha in linhas_filtradas:
-    save = ord_linha(linha)
-    for x in save:
-        arquivo_save.write(str(x)+'  ')
-
-    arquivo_save.write('\n')
+escrever_arquivo(r'C:\Users\mchhe\OneDrive\Imagens\Documentos\Matrizes\txt\988.txt')
