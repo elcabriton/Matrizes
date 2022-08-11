@@ -81,6 +81,10 @@ def escrever_arquivo(arquivo_entrada):
         lambda number: '{:e}'.format(number))
     resultado_final.to_csv(arquivo_entrada+'_OUT.txt', sep=' ', index=False, header=False)
 
+for i in range (1,3):
+    processo=multiprocessing.Process(target=escrever_arquivo,args=('txt/'+str(i)+'.txt',))
+    processo.start()
+    processo.join()
 
 
-escrever_arquivo(r'C:\Users\mchhe\OneDrive\Imagens\Documentos\Matrizes\txt\988.txt')
+
