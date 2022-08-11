@@ -65,7 +65,7 @@ def escrever_arquivo(arquivo_entrada):
     maior_coluna = maiores_colunas(df)
     menor_linha = menores_linhas(df)
     menor_coluna = menores_colunas(df)
-    
+
     resultados = np.array([np.zeros(100) for _ in range(7)])
 
     resultados[0] = sum_linha
@@ -79,12 +79,20 @@ def escrever_arquivo(arquivo_entrada):
     resultado_final = pd.concat([ordenar_linha, ordenar_coluna, pd_resultados])
     resultado_final = resultado_final.applymap(
         lambda number: '{:e}'.format(number))
-    resultado_final.to_csv(arquivo_entrada+'_OUT.txt', sep=' ', index=False, header=False)
-
-for i in range (1,3):
-    processo=multiprocessing.Process(target=escrever_arquivo,args=('txt/'+str(i)+'.txt',))
-    processo.start()
-    processo.join()
+    resultado_final.to_csv(arquivo_entrada+'_OUT.txt',
+                           sep=' ', index=False, header=False)
 
 
+if __name__ == "__main__":
+    inicio = time.time()
+    processos = []
+    for i in range(1, 500):
+        processo = multiprocessing.Process(
+            target=escrever_arquivo, args=('txt/'+str(i)+'.txt',))
+        processo.start()
+        processos.append(processo)
+    for processo in processos:
+        processo.join()
 
+    fim = time.time()
+    print(fim-inicio)
