@@ -86,7 +86,7 @@ def escrever_arquivo(arquivo_entrada):
 if __name__ == "__main__":
     inicio = time.time()
     processos = []
-    for i in range(1, 500):
+    for i in range(1, 1000):
         processo = multiprocessing.Process(
             target=escrever_arquivo, args=('txt/'+str(i)+'.txt',))
         processo.start()
