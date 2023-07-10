@@ -56,7 +56,10 @@ def escrever_arquivo(arquivo_entrada):
 
     pd_resultados = pd.DataFrame(data=resultados)
     resultado_final = pd.concat([ordenar_linha, ordenar_coluna, pd_resultados])
-    resultado_final.to_csv(arquivo_entrada+'_OUT.txt', sep=' ', index=False, header=False)
+    resultado_final = resultado_final.applymap(lambda number: '{:e}'.format(number))
+
+    # Convert DataFrame to scientific notation before writing to file
+    resultado_final.to_csv(arquivo_entrada+'_OUT.txt', sep=' ', index=False, header=False, float_format='%e')
 
 
 def calculos(df):
@@ -105,9 +108,10 @@ def processar_arquivos(arquivos, num_threads_ler, num_threads_escrever, num_thre
 
         pd_resultados = pd.DataFrame(data=resultados)
         resultado_final = pd.concat([ordenar_linha, ordenar_coluna, pd_resultados])
+        resultado_final = resultado_final.applymap(lambda number: '{:e}'.format(number))
 
         inicio_escrita = time.time()
-        resultado_final.to_csv(arquivo+'_OUT.txt', sep=' ', index=False, header=False)
+        resultado_final.to_csv(arquivo+'_OUT.txt', sep=' ', index=False, header=False, float_format='%e')
         fim_escrita = time.time()
         tempos_escrita.append(fim_escrita - inicio_escrita)
 
@@ -122,22 +126,13 @@ def processar_arquivos(arquivos, num_threads_ler, num_threads_escrever, num_thre
         print("Tempo de cálculo:", tempos_calculo[i])
         print("Tempo de escrita:", tempos_escrita[i])
         print("Tempo total:", tempos_arquivo[i])
-        
-    tempo_total_de_leitura = sum(tempos_leitura)
-    tempo_total_de_calculos = sum(tempos_calculo)
-    tempo_total_de_escrita = sum(tempos_escrita)
-    tempo_total_arquivos = sum(tempos_arquivo)
 
-    print("Tempo total para todas as leituras:", tempo_total_de_leitura)
-    print("Tempo total para todos os cálculos:", tempo_total_calculos)
-    print("Tempo total para todas as escritas:", tempo_total_escrita)
-    
+    tempo_total_arquivos = sum(tempos_arquivo)
     print("Tempo total para todos os arquivos:", tempo_total_arquivos)
 
 
 if __name__ == "__main__":
-    
-    
+
 
     arquivos = ['txt/'+str(i)+'.txt' for i in range(1, 31)]
 
