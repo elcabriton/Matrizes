@@ -122,13 +122,22 @@ def processar_arquivos(arquivos, num_threads_ler, num_threads_escrever, num_thre
         print("Tempo de cálculo:", tempos_calculo[i])
         print("Tempo de escrita:", tempos_escrita[i])
         print("Tempo total:", tempos_arquivo[i])
-
+        
+    tempo_total_de_leitura = sum(tempos_leitura)
+    tempo_total_de_calculos = sum(tempos_calculo)
+    tempo_total_de_escrita = sum(tempos_escrita)
     tempo_total_arquivos = sum(tempos_arquivo)
+
+    print("Tempo total para todas as leituras:", tempo_total_de_leitura)
+    print("Tempo total para todos os cálculos:", tempo_total_calculos)
+    print("Tempo total para todas as escritas:", tempo_total_escrita)
+    
     print("Tempo total para todos os arquivos:", tempo_total_arquivos)
 
 
 if __name__ == "__main__":
-    inicio = time.time()
+    
+    
 
     arquivos = ['txt/'+str(i)+'.txt' for i in range(1, 31)]
 
@@ -138,5 +147,4 @@ if __name__ == "__main__":
 
     processar_arquivos(arquivos, num_threads_ler, num_threads_escrever, num_threads_calculos)
 
-    fim = time.time()
-    print(fim - inicio)
+   
